@@ -28,6 +28,10 @@ public:
     void postMessageToList(const juce::MidiMessage& message, const juce::String& source);
     void addMessageToList(const juce::MidiMessage& message, const juce::String& source);
     void handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message);
+    void oscSelectorMenuChanged();
+
+    float sinOscillatorAmplitude();
+    float sawOscillatorAmplitude();
 
     void logMessage(const juce::String& m);
 
@@ -59,6 +63,9 @@ private:
     juce::Slider releaseSlider;
     juce::Label releaseLabel;
 
+    juce::Label oscSelectorLabel;
+    juce::ComboBox oscSelectorMenu;
+
 
 
     bool isAddingFromMidiInput = false;
@@ -78,6 +85,7 @@ private:
     double decayLength = 100;
     double sustain = .5;
     double releaseLength = 100;
+    int oscillator = 1;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

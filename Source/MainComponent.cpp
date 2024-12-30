@@ -57,6 +57,12 @@ MainComponent::MainComponent() :
     releaseSlider.setValue(releaseLength);
     releaseSlider.onValueChange = [this] {releaseLength = releaseSlider.getValue(); };
 
+    addAndMakeVisible(oscSelectorMenu);
+    oscSelectorMenu.addItem("Sine", 1);
+    oscSelectorMenu.addItem("Saw", 2);
+    oscSelectorMenu.onChange = [this]{ oscSelectorMenuChanged(); };
+    oscSelectorMenu.setSelectedId(1);
+
     addAndMakeVisible(keyboardComponent);
     addAndMakeVisible(midiMessagesBox);
     midiMessagesBox.setMultiLine(true);
@@ -96,6 +102,14 @@ void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate
     updateAngleDelta();
 }
 
+float MainComponent::sinOscillatorAmplitude() {
+    return (float)std::sin(currentAngle);
+}
+
+float MainComponent::sawOscillatorAmplitude() {
+    return (-1.0 + 2 * (currentAngle / (2 * (juce::MathConstants<float>::pi))));
+}
+
 void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     auto level = (float)levelSlider.getValue();
@@ -105,8 +119,17 @@ void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
     auto* leftBuffer = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
     auto* rightBuffer = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
     for (auto sample = 0; sample < bufferToFill.numSamples; ++sample) {
-        auto currentSample = (float)std::sin(currentAngle);
+        float currentSample = 0;
+        if (oscillator == 1) {
+            currentSample = sinOscillatorAmplitude();
+        }
+        if (oscillator == 2) {
+            currentSample = sawOscillatorAmplitude();
+        }
         currentAngle += angleDelta;
+        if (currentAngle >= 2.0f * juce::MathConstants<float>::pi) {
+            currentAngle -= 2.0f * juce::MathConstants<float>::pi;
+        }
 
         if (playing) {
             float msSinceStart = samplesSinceStart / currentSampleRate * 1000.0;
@@ -177,6 +200,7 @@ void MainComponent::resized()
     decaySlider.setBounds(sliderLeft, 110, sliderRight, 20);
     sustainSlider.setBounds(sliderLeft, 140, sliderRight, 20);
     releaseSlider.setBounds(sliderLeft, 170, sliderRight, 20);
+    oscSelectorMenu.setBounds(sliderLeft, 200, sliderRight, 20);
     keyboardComponent.setBounds(0, getHeight() - 150, getWidth(), 150);
     //midiMessagesBox.setBounds(10, 80, getWidth() - 20, getHeight() - 240);
 }
@@ -243,6 +267,10 @@ void MainComponent::logMessage(const juce::String& m)
 {
     midiMessagesBox.moveCaretToEnd();
     midiMessagesBox.insertTextAtCaret(m + juce::newLine);
+}
+
+void MainComponent::oscSelectorMenuChanged() {
+    oscillator = oscSelectorMenu.getSelectedId();
 }
 
 juce::String MainComponent::getMidiMessageDescription(const juce::MidiMessage& m)
