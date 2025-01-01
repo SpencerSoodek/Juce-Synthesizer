@@ -60,6 +60,7 @@ MainComponent::MainComponent() :
     addAndMakeVisible(oscSelectorMenu);
     oscSelectorMenu.addItem("Sine", 1);
     oscSelectorMenu.addItem("Saw", 2);
+    oscSelectorMenu.addItem("Square", 3);
     oscSelectorMenu.onChange = [this]{ oscSelectorMenuChanged(); };
     oscSelectorMenu.setSelectedId(1);
 
@@ -110,6 +111,15 @@ float MainComponent::sawOscillatorAmplitude() {
     return (-1.0 + 2 * (currentAngle / (2 * (juce::MathConstants<float>::pi))));
 }
 
+float MainComponent::squareOscillatorAmplitude() {
+    if (currentAngle <= juce::MathConstants<float>::pi) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
 void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     auto level = (float)levelSlider.getValue();
@@ -125,6 +135,9 @@ void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
         }
         if (oscillator == 2) {
             currentSample = sawOscillatorAmplitude();
+        }
+        if (oscillator == 3) {
+            currentSample = squareOscillatorAmplitude();
         }
         currentAngle += angleDelta;
         if (currentAngle >= 2.0f * juce::MathConstants<float>::pi) {

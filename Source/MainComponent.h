@@ -32,6 +32,7 @@ public:
 
     float sinOscillatorAmplitude();
     float sawOscillatorAmplitude();
+    float squareOscillatorAmplitude();
 
     void logMessage(const juce::String& m);
 

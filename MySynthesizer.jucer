@@ -4,7 +4,11 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="W7mdiX" name="MySynthesizer">
     <GROUP id="{F1942C5B-564C-1131-675A-038C748E325A}" name="Source">
+      <FILE id="adJ6Ii" name="IncomingMessageCallback.h" compile="0" resource="0"
+            file="Source/IncomingMessageCallback.h"/>
       <FILE id="lcw1wv" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="xyIyD2" name="IncomingMessageCallback.cpp" compile="1" resource="0"
+            file="Source/IncomingMessageCallback.cpp"/>
       <FILE id="cdxVI9" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="rqIvBE" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
