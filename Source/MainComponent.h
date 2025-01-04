@@ -2,6 +2,8 @@
 
 #include <JuceHeader.h>
 #include "IncomingMessageCallback.h"
+#include "OnePoleFilter.h"
+#include "FirFilter.h"
 
 //==============================================================================
 /*
@@ -33,6 +35,11 @@ public:
     float sinOscillatorAmplitude();
     float sawOscillatorAmplitude();
     float squareOscillatorAmplitude();
+
+    float sawtoothBandLimited();
+    float squareBandLimited();
+
+    
 
     void logMessage(const juce::String& m);
 
@@ -71,12 +78,15 @@ private:
 
     bool isAddingFromMidiInput = false;
     double currentSampleRate = 0.0;
+    double currentNyquist = 0.0;
     double currentAngle = 0.0;
     double angleDelta = 0.0;
     double currentFrequency = 500.0;
 
     juce::MidiKeyboardState keyboardState;
     juce::MidiKeyboardComponent keyboardComponent;
+
+    FirFilter nyquistFilter;
 
     bool playing = false;
     bool released = false;

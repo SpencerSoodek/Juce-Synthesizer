@@ -100,6 +100,8 @@ void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate
     juce::Logger::getCurrentLogger()->writeToLog(message);
 
     currentSampleRate = sampleRate;
+    currentNyquist = currentSampleRate / 2.0;
+    nyquistFilter = FirFilter::FirFilter(257, currentNyquist, currentSampleRate);
     updateAngleDelta();
 }
 
@@ -111,6 +113,18 @@ float MainComponent::sawOscillatorAmplitude() {
     return (-1.0 + 2 * (currentAngle / (2 * (juce::MathConstants<float>::pi))));
 }
 
+float MainComponent::sawtoothBandLimited() {
+    int numPartials = static_cast<int>((currentSampleRate / 2.0f) / currentFrequency);
+    float twoPiAngle = 2.0f * juce::MathConstants<float>::pi * (currentAngle / (2.0f * juce::MathConstants<float>::pi));
+
+    float amplitude = 0.0f;
+    for (int n = 1; n <= numPartials; n++) {
+        amplitude += (1.0f / n) * std::sin(n * twoPiAngle);
+    }
+    return 2.0f * amplitude / juce::MathConstants<float>::pi;
+}
+
+
 float MainComponent::squareOscillatorAmplitude() {
     if (currentAngle <= juce::MathConstants<float>::pi) {
         return 1;
@@ -118,6 +132,17 @@ float MainComponent::squareOscillatorAmplitude() {
     else {
         return 0;
     }
+}
+
+float MainComponent::squareBandLimited() {
+    int numPartials = static_cast<int>((currentSampleRate / 2.0f) / currentFrequency);
+    float twoPiAngle = 2.0f * juce::MathConstants<float>::pi * (currentAngle / (2.0f * juce::MathConstants<float>::pi));
+
+    float amplitude = 0.0f;
+    for (int n = 1; n <= numPartials; n+= 2) {
+        amplitude += (1.0f / n) * std::sin(n * twoPiAngle);
+    }
+    return 2.0f * amplitude / juce::MathConstants<float>::pi;
 }
 
 void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
@@ -134,10 +159,10 @@ void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
             currentSample = sinOscillatorAmplitude();
         }
         if (oscillator == 2) {
-            currentSample = sawOscillatorAmplitude();
+            currentSample = sawtoothBandLimited();
         }
         if (oscillator == 3) {
-            currentSample = squareOscillatorAmplitude();
+            currentSample = squareBandLimited();
         }
         currentAngle += angleDelta;
         if (currentAngle >= 2.0f * juce::MathConstants<float>::pi) {
@@ -178,6 +203,7 @@ void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
             currentSample = 0;
         }
 
+        //currentSample = nyquistFilter.applyFilter(currentSample);
 
         leftBuffer[sample] = currentSample * levelScale - level;
         rightBuffer[sample] = currentSample * levelScale - level;

@@ -6,6 +6,11 @@
     <GROUP id="{F1942C5B-564C-1131-675A-038C748E325A}" name="Source">
       <FILE id="adJ6Ii" name="IncomingMessageCallback.h" compile="0" resource="0"
             file="Source/IncomingMessageCallback.h"/>
+      <FILE id="D3h9bp" name="FirFilter.cpp" compile="1" resource="0" file="Source/FirFilter.cpp"/>
+      <FILE id="XuLCRT" name="FirFilter.h" compile="0" resource="0" file="Source/FirFilter.h"/>
+      <FILE id="BMAfMg" name="OnePoleFilter.cpp" compile="1" resource="0"
+            file="Source/OnePoleFilter.cpp"/>
+      <FILE id="UnDWNo" name="OnePoleFilter.h" compile="0" resource="0" file="Source/OnePoleFilter.h"/>
       <FILE id="lcw1wv" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="xyIyD2" name="IncomingMessageCallback.cpp" compile="1" resource="0"
             file="Source/IncomingMessageCallback.cpp"/>
