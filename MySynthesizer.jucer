@@ -4,6 +4,9 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="W7mdiX" name="MySynthesizer">
     <GROUP id="{F1942C5B-564C-1131-675A-038C748E325A}" name="Source">
+      <FILE id="yy8UFW" name="BiquadFilter.cpp" compile="1" resource="0"
+            file="Source/BiquadFilter.cpp"/>
+      <FILE id="T1Zg6k" name="BiquadFilter.h" compile="0" resource="0" file="Source/BiquadFilter.h"/>
       <FILE id="adJ6Ii" name="IncomingMessageCallback.h" compile="0" resource="0"
             file="Source/IncomingMessageCallback.h"/>
       <FILE id="D3h9bp" name="FirFilter.cpp" compile="1" resource="0" file="Source/FirFilter.cpp"/>

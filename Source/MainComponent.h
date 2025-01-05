@@ -4,6 +4,7 @@
 #include "IncomingMessageCallback.h"
 #include "OnePoleFilter.h"
 #include "FirFilter.h"
+#include "BiquadFilter.h"
 
 //==============================================================================
 /*
@@ -35,6 +36,7 @@ public:
     float sinOscillatorAmplitude();
     float sawOscillatorAmplitude();
     float squareOscillatorAmplitude();
+    float whiteNoise();
 
     float sawtoothBandLimited();
     float squareBandLimited();
@@ -70,6 +72,10 @@ private:
     juce::Label sustainLabel;
     juce::Slider releaseSlider;
     juce::Label releaseLabel;
+    juce::Slider filterCutoffSlider;
+    juce::Label filterCutoffLabel;
+    juce::Slider filterResonanceSlider;
+    juce::Label filterResonanceLabel;
 
     juce::Label oscSelectorLabel;
     juce::ComboBox oscSelectorMenu;
@@ -87,6 +93,7 @@ private:
     juce::MidiKeyboardComponent keyboardComponent;
 
     FirFilter nyquistFilter;
+    BiquadFilter adjustableFilter;
 
     bool playing = false;
     bool released = false;

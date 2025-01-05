@@ -61,8 +61,24 @@ MainComponent::MainComponent() :
     oscSelectorMenu.addItem("Sine", 1);
     oscSelectorMenu.addItem("Saw", 2);
     oscSelectorMenu.addItem("Square", 3);
+    oscSelectorMenu.addItem("White Noise", 4);
     oscSelectorMenu.onChange = [this]{ oscSelectorMenuChanged(); };
     oscSelectorMenu.setSelectedId(1);
+
+    addAndMakeVisible(filterCutoffSlider);
+    filterCutoffSlider.setRange(0.0f, 20000.0f);
+    filterCutoffSlider.setSkewFactorFromMidPoint(5000.0);
+    filterCutoffLabel.setText("Filter cutoff", juce::dontSendNotification);
+    filterCutoffLabel.attachToComponent(&filterCutoffSlider, true);
+    filterCutoffSlider.setValue(20000.0f);
+    filterCutoffSlider.onValueChange = [this] {adjustableFilter.setCutoff(filterCutoffSlider.getValue()); };
+
+    addAndMakeVisible(filterResonanceSlider);
+    filterResonanceSlider.setRange(0.1f, 18.0f);
+    filterResonanceLabel.setText("Filter Resonance", juce::dontSendNotification);
+    filterResonanceLabel.attachToComponent(&filterResonanceSlider, true);
+    filterResonanceSlider.setValue(0.71f);
+    filterResonanceSlider.onValueChange = [this] {adjustableFilter.setResonance(filterResonanceSlider.getValue()); };
 
     addAndMakeVisible(keyboardComponent);
     addAndMakeVisible(midiMessagesBox);
@@ -101,7 +117,8 @@ void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 
     currentSampleRate = sampleRate;
     currentNyquist = currentSampleRate / 2.0;
-    nyquistFilter = FirFilter::FirFilter(257, currentNyquist, currentSampleRate);
+    nyquistFilter = FirFilter::FirFilter(129, currentNyquist, currentSampleRate);
+    adjustableFilter = BiquadFilter::BiquadFilter(currentNyquist, 3.0f, currentSampleRate, 1);
     updateAngleDelta();
 }
 
@@ -145,10 +162,13 @@ float MainComponent::squareBandLimited() {
     return 2.0f * amplitude / juce::MathConstants<float>::pi;
 }
 
+float MainComponent::whiteNoise() {
+    return random.nextFloat() * 2.0f - 1.0f;
+}
+
 void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     auto level = (float)levelSlider.getValue();
-    auto levelScale = level * 2.0f;
 
 
     auto* leftBuffer = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
@@ -163,6 +183,9 @@ void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
         }
         if (oscillator == 3) {
             currentSample = squareBandLimited();
+        }
+        if (oscillator == 4) {
+            currentSample = whiteNoise();
         }
         currentAngle += angleDelta;
         if (currentAngle >= 2.0f * juce::MathConstants<float>::pi) {
@@ -202,11 +225,11 @@ void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
         else {
             currentSample = 0;
         }
-
+        currentSample = adjustableFilter.applyFilter(currentSample);
         //currentSample = nyquistFilter.applyFilter(currentSample);
 
-        leftBuffer[sample] = currentSample * levelScale - level;
-        rightBuffer[sample] = currentSample * levelScale - level;
+        leftBuffer[sample] = currentSample * level;
+        rightBuffer[sample] = currentSample * level;
     }
 }
 
@@ -240,6 +263,8 @@ void MainComponent::resized()
     sustainSlider.setBounds(sliderLeft, 140, sliderRight, 20);
     releaseSlider.setBounds(sliderLeft, 170, sliderRight, 20);
     oscSelectorMenu.setBounds(sliderLeft, 200, sliderRight, 20);
+    filterCutoffSlider.setBounds(sliderLeft, 230, sliderRight, 20);
+    filterResonanceSlider.setBounds(sliderLeft, 260, sliderRight, 20);
     keyboardComponent.setBounds(0, getHeight() - 150, getWidth(), 150);
     //midiMessagesBox.setBounds(10, 80, getWidth() - 20, getHeight() - 240);
 }
