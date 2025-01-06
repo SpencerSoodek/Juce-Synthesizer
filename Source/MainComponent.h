@@ -79,6 +79,8 @@ private:
 
     juce::Label oscSelectorLabel;
     juce::ComboBox oscSelectorMenu;
+    juce::ComboBox filterTypeMenu;
+    juce::Label filterTypeLabel;
 
 
 

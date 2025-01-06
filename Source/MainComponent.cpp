@@ -91,6 +91,12 @@ MainComponent::MainComponent() :
     midiMessagesBox.setColour(juce::TextEditor::backgroundColourId, juce::Colour(0x32ffffff));
     midiMessagesBox.setColour(juce::TextEditor::outlineColourId, juce::Colour(0x1c000000));
     midiMessagesBox.setColour(juce::TextEditor::shadowColourId, juce::Colour(0x16000000));
+
+    addAndMakeVisible(filterTypeMenu);
+    filterTypeMenu.addItem("Low Pass", 1);
+    filterTypeMenu.addItem("High Pass", 2);
+    filterTypeMenu.onChange = [this] { adjustableFilter.setFilterType(filterTypeMenu.getSelectedId()); };
+    filterTypeMenu.setSelectedId(1);
 }
 
 MainComponent::~MainComponent()
@@ -265,6 +271,7 @@ void MainComponent::resized()
     oscSelectorMenu.setBounds(sliderLeft, 200, sliderRight, 20);
     filterCutoffSlider.setBounds(sliderLeft, 230, sliderRight, 20);
     filterResonanceSlider.setBounds(sliderLeft, 260, sliderRight, 20);
+    filterTypeMenu.setBounds(sliderLeft, 290, sliderRight, 20);
     keyboardComponent.setBounds(0, getHeight() - 150, getWidth(), 150);
     //midiMessagesBox.setBounds(10, 80, getWidth() - 20, getHeight() - 240);
 }
