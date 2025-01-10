@@ -4,6 +4,12 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="W7mdiX" name="MySynthesizer">
     <GROUP id="{F1942C5B-564C-1131-675A-038C748E325A}" name="Source">
+      <FILE id="KYBPSR" name="SynthVariables.cpp" compile="1" resource="0"
+            file="Source/SynthVariables.cpp"/>
+      <FILE id="Ypr4qh" name="SynthVariables.h" compile="0" resource="0"
+            file="Source/SynthVariables.h"/>
+      <FILE id="Y2K7zM" name="Voice.cpp" compile="1" resource="0" file="Source/Voice.cpp"/>
+      <FILE id="nMVQNx" name="Voice.h" compile="0" resource="0" file="Source/Voice.h"/>
       <FILE id="yy8UFW" name="BiquadFilter.cpp" compile="1" resource="0"
             file="Source/BiquadFilter.cpp"/>
       <FILE id="T1Zg6k" name="BiquadFilter.h" compile="0" resource="0" file="Source/BiquadFilter.h"/>

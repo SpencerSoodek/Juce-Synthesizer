@@ -5,6 +5,8 @@
 #include "OnePoleFilter.h"
 #include "FirFilter.h"
 #include "BiquadFilter.h"
+#include "Voice.h"
+#include "SynthVariables.h"
 
 //==============================================================================
 /*
@@ -33,14 +35,8 @@ public:
     void handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message);
     void oscSelectorMenuChanged();
 
-    float sinOscillatorAmplitude();
-    float sawOscillatorAmplitude();
-    float squareOscillatorAmplitude();
-    float whiteNoise();
-
-    float sawtoothBandLimited();
-    float squareBandLimited();
-
+    SynthVariables synthVariables = SynthVariables();
+    Voice voices[8];
     
 
     void logMessage(const juce::String& m);
@@ -55,13 +51,19 @@ public:
     void updateAngleDelta();
     double startTime;
 
+   // double attackLength = 100;
+    //double decayLength = 100;
+    //double sustain = .5;
+    //double releaseLength = 100;
+    // int oscillator = 1;
+
 private:
     //==============================================================================
     // Your private member variables go here...
     juce::Slider levelSlider;
     juce::Label levelLabel;
-    juce::Slider freqSlider;
-    juce::Label freqLabel;
+    //juce::Slider freqSlider;
+    //juce::Label freqLabel;
     juce::TextEditor midiMessagesBox;
     juce::Random random;
     juce::Slider attackSlider;
@@ -101,10 +103,6 @@ private:
     bool released = false;
     int samplesSinceStart = 0;
     int samplesSinceReleased = 0;
-    double attackLength = 100;
-    double decayLength = 100;
-    double sustain = .5;
-    double releaseLength = 100;
     int oscillator = 1;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
